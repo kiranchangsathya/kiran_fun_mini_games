@@ -4,13 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Snake</title>
+    <link rel="stylesheet" href="../shared/theme.css" />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div class="wrapper">
       <header class="header">
         <!-- Home button -->
-        <a class="btn-home" href="../index.html" title="Back to Home">🏠</a>
+        <a class="btn-icon" href="../index.html" title="Back to Home">🏠</a>
 
         <!-- Title + live speed level badge -->
         <div class="title-group">
@@ -19,7 +20,7 @@
         </div>
 
         <!-- Pause button (centre of header) -->
-        <button class="btn-pause" id="btnPause" title="Pause (P)" disabled>⏸</button>
+        <button class="btn-icon" id="btnPause" title="Pause (P)" disabled>⏸</button>
 
         <!-- Score board — P2 section hidden in solo mode -->
         <div class="score-board">
@@ -86,8 +87,8 @@
               </div>
             </div>
 
-            <p class="overlay-final-score hidden" id="overlayFinalScore"></p>
-            <button class="btn-restart" id="btnRestart">Start Game</button>
+            <p class="overlay-final hidden" id="overlayFinal"></p>
+            <button class="btn-primary" id="btnStart">Start Game</button>
           </div>
         </div>
 
@@ -145,6 +146,6 @@
       </div>
     </div>
 
-    <script src="snake.js"></script>
+    <script type="module" src="game.js"></script>
   </body>
 </html>

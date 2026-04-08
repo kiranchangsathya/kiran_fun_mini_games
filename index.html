@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>🎮 Arcade</title>
+    <link rel="stylesheet" href="shared/theme.css" />
     <link rel="stylesheet" href="home.css" />
   </head>
   <body>
@@ -12,32 +13,29 @@
         <h1 class="home-title">🎮 Arcade</h1>
         <p class="home-subtitle">Pick a game and play!</p>
       </header>
-
-      <div class="game-cards">
-
-        <!-- Snake card -->
-        <a class="game-card snake-card" href="snake/index.html">
-          <div class="card-icon">🐍</div>
-          <h2 class="card-name">Snake</h2>
-          <p class="card-desc">
-            Eat food, grow your snake, and don't crash!<br/>
-            Solo or 2-player mode.
-          </p>
-          <span class="card-btn snake-btn">Play →</span>
-        </a>
-
-        <!-- Dino card -->
-        <a class="game-card dino-card" href="dino/index.html">
-          <div class="card-icon">🦕</div>
-          <h2 class="card-name">Dino Run</h2>
-          <p class="card-desc">
-            Jump over cacti and survive as long as you can!<br/>
-            Speed increases as you level up.
-          </p>
-          <span class="card-btn dino-btn">Play →</span>
-        </a>
-
-      </div>
+      <!-- Cards are injected here by home.js reading games.config.js -->
+      <div class="game-cards" id="gameCards"></div>
     </div>
-    </body>
+
+    <script type="module">
+      import { GAMES } from './games.config.js';
+
+      const container = document.getElementById('gameCards');
+
+      GAMES.forEach(game => {
+        const a = document.createElement('a');
+        a.className = 'game-card';
+        a.href      = game.href;
+        a.style.setProperty('--accent', game.accentColor);
+        a.innerHTML = `
+          <div class="card-icon">${game.emoji}</div>
+          <h2 class="card-name">${game.name}</h2>
+          <p class="card-desc">${game.description}</p>
+          <p class="card-controls">${game.controls}</p>
+          <span class="card-btn">Play →</span>
+        `;
+        container.appendChild(a);
+      });
+    </script>
+  </body>
 </html>
