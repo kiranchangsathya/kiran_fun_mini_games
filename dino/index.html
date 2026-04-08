@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🦕 Dino Run</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="wrapper">
+
+      <!-- ── Header ───────────────────────────────────────────────── -->
+      <header class="header">
+        <a class="btn-home" href="../index.html" title="Back to Home">🏠</a>
+
+        <div class="title-group">
+          <h1 class="title">🦕 Dino Run</h1>
+          <span class="speed-badge" id="speedBadge">Lv. 1</span>
+        </div>
+
+        <div class="score-board">
+          <div class="score-item">
+            <span class="score-label">SCORE</span>
+            <span class="score-value" id="scoreEl">0</span>
+          </div>
+          <div class="score-item">
+            <span class="score-label">BEST</span>
+            <span class="score-value hi-score" id="hiScoreEl">0</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- ── Canvas ────────────────────────────────────────────────── -->
+      <div class="canvas-container">
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- Start / Game-over overlay -->
+        <div class="overlay" id="overlay">
+          <div class="overlay-card">
+            <p class="overlay-emoji" id="overlayEmoji">🦕</p>
+            <h2 class="overlay-title" id="overlayTitle">Dino Run</h2>
+            <p class="overlay-subtitle" id="overlaySubtitle">Jump over the cacti!</p>
+            <p class="overlay-final hidden" id="overlayFinal"></p>
+            <button class="btn-start" id="btnStart">Start Game</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Jump button (mouse / touch) ──────────────────────────── -->
+      <div class="jump-controls">
+        <button class="btn-jump" id="btnJump">⬆ JUMP</button>
+      </div>
+
+      <!-- ── Footer ───────────────────────────────────────────────── -->
+      <footer class="footer">
+        Press <strong>Space</strong> or tap <strong>⬆ JUMP</strong> to leap over cacti &nbsp;·&nbsp; Don't crash!
+      </footer>
+
+    </div>
+    <script src="dino.js"></script>
+  </body>
+</html>

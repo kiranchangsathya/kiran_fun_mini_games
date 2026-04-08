@@ -1,0 +1,477 @@
+/* ─── Reset & base ─────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  height: 100vh;
+  overflow: hidden;              /* no page scrolling — it's a game */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0f172a;           /* dark navy */
+  font-family: "Segoe UI", system-ui, sans-serif;
+  color: #e2e8f0;
+}
+
+/* ─── Page wrapper ──────────────────────────────────────────────── */
+.wrapper {
+  /*
+   * --game-size: the largest square that fits inside the viewport,
+   * leaving room for the header (~60 px), footer (~22 px),
+   * gaps (20 px), and wrapper padding (24 px). Cap at 800 px.
+   */
+  --game-size: min(800px, calc(100vw - 32px), calc(100vh - 295px));
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 16px;
+  width: 100%;
+  height: 100%;
+}
+
+/* ─── Header ────────────────────────────────────────────────────── */
+.header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: var(--game-size);   /* always matches the canvas width */
+}
+
+/* Home button */
+.btn-home {
+  font-size: 1.4rem;
+  text-decoration: none;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 2px solid #334155;
+  background: #1e293b;
+  transition: border-color 0.2s, background 0.2s;
+  flex-shrink: 0;
+}
+.btn-home:hover { border-color: #4ade80; background: #263548; }
+
+/* Group title + speed badge side-by-side */
+.title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #4ade80;               /* green */
+}
+
+/* Small pill that shows the current speed level */
+.speed-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  background: #1e293b;
+  color: #94a3b8;
+  border: 1px solid #334155;
+  transition: color 0.3s, border-color 0.3s;
+}
+
+/* Badge brightens as speed increases */
+.speed-badge.lv2 { color: #fbbf24; border-color: #fbbf24; }
+.speed-badge.lv3 { color: #fb923c; border-color: #fb923c; }
+.speed-badge.lv4 { color: #f87171; border-color: #f87171; }
+.speed-badge.lv5 { color: #e879f9; border-color: #e879f9; }
+
+.score-board {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* One column per player */
+.player-score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.2;
+}
+
+.score-divider {
+  font-size: 1.4rem;
+  color: #334155;
+  padding: 0 2px;
+}
+
+.score-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.score-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  min-width: 2ch;
+  text-align: center;
+}
+
+/* Player-specific colours */
+.p1-label { color: #4ade80; }   /* green */
+.p1-score { color: #4ade80; }
+
+.p2-label { color: #60a5fa; }   /* blue */
+.p2-score { color: #60a5fa; }
+
+/* ─── Canvas container (relative so overlay can be positioned) ─── */
+.canvas-container {
+  position: relative;
+  /* Fill exactly the computed game size — canvas scales via CSS below */
+  width:  var(--game-size);
+  height: var(--game-size);
+  flex-shrink: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 0 40px rgba(74, 222, 128, 0.2);
+  border: 2px solid #1e293b;
+}
+
+/* Stretch the canvas element to fill its container.
+   The canvas still renders at its attribute resolution (800×800)
+   but is displayed at whatever CSS size the container dictates. */
+canvas {
+  display: block;
+  width:  100%;
+  height: 100%;
+}
+
+/* ─── Overlay (start screen / game-over screen) ─────────────────── */
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-start;       /* allow card to start at top when tall */
+  justify-content: center;
+  overflow-y: auto;              /* scroll if content exceeds canvas height */
+  padding: 20px 16px;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(4px);
+}
+
+.overlay.hidden {
+  display: none;
+}
+
+.overlay-card {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin: auto;                  /* stay centred when content is shorter than overlay */
+}
+
+.overlay-emoji {
+  font-size: 3.5rem;
+  line-height: 1;
+}
+
+.overlay-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.overlay-subtitle {
+  font-size: 0.95rem;
+  color: #94a3b8;
+}
+
+.overlay-final-score {
+  font-size: 1.1rem;
+  color: #facc15;
+  font-weight: 600;
+}
+
+.overlay-final-score.hidden {
+  display: none;
+}
+
+/* ─── Mode toggle (segmented control) ──────────────────────────── */
+.mode-toggle {
+  display: flex;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid #334155;
+}
+
+.mode-btn {
+  flex: 1;
+  padding: 8px 20px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  border: none;
+  background: #1e293b;
+  color: #64748b;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.mode-btn.active {
+  background: #4ade80;
+  color: #0f172a;
+}
+
+.mode-btn:not(.active):hover {
+  background: #263548;
+  color: #e2e8f0;
+}
+
+/* ─── Name inputs inside the overlay ───────────────────────────── */
+.name-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 220px;
+}
+
+.name-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Coloured "Player 1" / "Player 2" labels */
+.name-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  width: 64px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.name-input {
+  flex: 1;
+  padding: 7px 10px;
+  border-radius: 6px;
+  border: 2px solid #334155;
+  background: #0f172a;
+  color: #f1f5f9;
+  font-size: 0.9rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+/* Focus ring matches each player's colour */
+.p1-input:focus { border-color: #4ade80; }
+.p2-input:focus { border-color: #60a5fa; }
+
+/* ─── Wins badge (leaderboard, duo mode only) ───────────────────── */
+.wins-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.75;
+}
+
+/* ─── Pause button (header centre) ─────────────────────────────── */
+.btn-pause {
+  font-size: 1.1rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid #334155;
+  background: #1e293b;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.btn-pause:not(:disabled):hover {
+  background: #263548;
+  color: #e2e8f0;
+  border-color: #4ade80;
+}
+
+.btn-pause:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+/* ─── Color pickers (P1 snake · P2 snake · food) ────────────────── */
+.color-pickers {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.color-picker-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.color-picker-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: #64748b;               /* default: neutral grey */
+}
+
+/* Player-label colours override the neutral default */
+/* .p1-label and .p2-label already defined globally   */
+.food-label { color: #94a3b8; }
+
+.color-swatches {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.color-swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+  outline: none;
+}
+
+.color-swatch:hover {
+  transform: scale(1.2);
+}
+
+.color-swatch.selected {
+  border-color: #ffffff;
+  transform: scale(1.2);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25);
+}
+
+/* ─── Restart / Start button ────────────────────────────────────── */
+.btn-restart {
+  margin-top: 8px;
+  padding: 12px 32px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #4ade80;
+  color: #0f172a;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.btn-restart:hover  { background: #22c55e; }
+.btn-restart:active { transform: scale(0.96); }
+
+/* ─── Footer ────────────────────────────────────────────────────── */
+.footer {
+  font-size: 0.78rem;
+  color: #475569;
+  text-align: center;
+}
+
+/* ─── Global hidden utility (used by all toggle elements) ───────── */
+.hidden { display: none !important; }
+
+/* ─── On-screen D-pad controls ──────────────────────────────────── */
+.controls {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+  justify-content: center;
+}
+
+/* One D-pad widget (label + grid) */
+.dpad {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.dpad-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+/* 3×3 grid — buttons sit at the four cardinal positions */
+.dpad-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 44px);
+  grid-template-rows: repeat(3, 44px);
+  gap: 4px;
+}
+
+/* Arrow buttons */
+.dpad-btn {
+  width: 44px;
+  height: 44px;
+  font-size: 1.25rem;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s, filter 0.15s;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation; /* no 300 ms tap delay on mobile */
+}
+
+.dpad-btn:active { transform: scale(0.85); }
+
+/* P1 buttons — green theme */
+.p1-dpad-btn {
+  background: #166534;
+  color: #dcfce7;
+  border-color: #14532d;
+}
+.p1-dpad-btn:hover { filter: brightness(1.25); }
+
+/* P2 buttons — blue theme */
+.p2-dpad-btn {
+  background: #1e3a8a;
+  color: #dbeafe;
+  border-color: #1e40af;
+}
+.p2-dpad-btn:hover { filter: brightness(1.25); }
+
+/* Centre decoration (non-interactive circle) */
+.dpad-center {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #1e293b;
+  border: 2px solid #334155;
+}

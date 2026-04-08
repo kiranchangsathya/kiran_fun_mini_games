@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Snake</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <!-- Home button -->
+        <a class="btn-home" href="../index.html" title="Back to Home">🏠</a>
+
+        <!-- Title + live speed level badge -->
+        <div class="title-group">
+          <h1 class="title">🐍 Snake</h1>
+          <span class="speed-badge" id="speedBadge">Lv. 1</span>
+        </div>
+
+        <!-- Pause button (centre of header) -->
+        <button class="btn-pause" id="btnPause" title="Pause (P)" disabled>⏸</button>
+
+        <!-- Score board — P2 section hidden in solo mode -->
+        <div class="score-board">
+          <div class="player-score">
+            <span class="score-label p1-label" id="label1">P1</span>
+            <span class="score-value p1-score" id="score1">0</span>
+            <span class="wins-badge p1-label hidden" id="wins1">0 wins</span>
+          </div>
+          <div class="score-divider" id="scoreDivider">·</div>
+          <div class="player-score hidden" id="p2ScoreBox">
+            <span class="score-label p2-label" id="label2">P2</span>
+            <span class="score-value p2-score" id="score2">0</span>
+            <span class="wins-badge p2-label hidden" id="wins2">0 wins</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Game canvas -->
+      <div class="canvas-container">
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- Start / game-over overlay -->
+        <div class="overlay" id="overlay">
+          <div class="overlay-card">
+            <p class="overlay-emoji" id="overlayEmoji">🐍</p>
+            <h2 class="overlay-title" id="overlayTitle">Snake</h2>
+            <p class="overlay-subtitle" id="overlaySubtitle"></p>
+
+            <!-- Solo / Duo mode toggle -->
+            <div class="mode-toggle">
+              <button class="mode-btn active" id="modeSolo">1 Player</button>
+              <button class="mode-btn"        id="modeDuo" >2 Players</button>
+            </div>
+
+            <!-- Player name inputs (P2 row hidden in solo mode) -->
+            <div class="name-inputs">
+              <div class="name-field">
+                <label class="name-label p1-label" for="nameP1">Player 1</label>
+                <input class="name-input p1-input" id="nameP1"
+                       type="text" maxlength="12"
+                       placeholder="Player 1" value="Player 1" />
+              </div>
+              <div class="name-field hidden" id="p2NameField">
+                <label class="name-label p2-label" for="nameP2">Player 2</label>
+                <input class="name-input p2-input" id="nameP2"
+                       type="text" maxlength="12"
+                       placeholder="Player 2" value="Player 2" />
+              </div>
+            </div>
+
+            <!-- Colour pickers: P1 snake · P2 snake (duo only) · food -->
+            <div class="color-pickers">
+              <div class="color-picker-row">
+                <p class="color-picker-label p1-label">P1 Color</p>
+                <div class="color-swatches" id="colorSwatchesP1"></div>
+              </div>
+              <div class="color-picker-row hidden" id="p2ColorPicker">
+                <p class="color-picker-label p2-label">P2 Color</p>
+                <div class="color-swatches" id="colorSwatchesP2"></div>
+              </div>
+              <div class="color-picker-row">
+                <p class="color-picker-label food-label">Food Color</p>
+                <div class="color-swatches" id="colorSwatchesFood"></div>
+              </div>
+            </div>
+
+            <p class="overlay-final-score hidden" id="overlayFinalScore"></p>
+            <button class="btn-restart" id="btnRestart">Start Game</button>
+          </div>
+        </div>
+
+        <!-- Pause overlay (separate from start/game-over overlay) -->
+        <div class="overlay hidden" id="pauseOverlay">
+          <div class="overlay-card">
+            <p class="overlay-emoji">⏸</p>
+            <h2 class="overlay-title">Paused</h2>
+            <p class="overlay-subtitle">Press <strong>P</strong> or click to resume</p>
+          </div>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <span class="p1-label">P1</span> Arrow keys or D-pad
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        <span class="p2-label">P2</span> W A S D or D-pad
+        &nbsp;&nbsp;·&nbsp;&nbsp;
+        Race to eat the food &nbsp;·&nbsp; Don't crash!
+      </footer>
+
+      <!-- On-screen D-pad controls (click or tap to steer) -->
+      <div class="controls" id="controls">
+        <!-- P1 D-pad (always shown) -->
+        <div class="dpad" id="dpadP1">
+          <span class="dpad-label p1-label">P1</span>
+          <div class="dpad-grid">
+            <div></div>
+            <button class="dpad-btn p1-dpad-btn" id="p1DpadUp"    title="Up">↑</button>
+            <div></div>
+            <button class="dpad-btn p1-dpad-btn" id="p1DpadLeft"  title="Left">←</button>
+            <div class="dpad-center"></div>
+            <button class="dpad-btn p1-dpad-btn" id="p1DpadRight" title="Right">→</button>
+            <div></div>
+            <button class="dpad-btn p1-dpad-btn" id="p1DpadDown"  title="Down">↓</button>
+            <div></div>
+          </div>
+        </div>
+
+        <!-- P2 D-pad (duo mode only) -->
+        <div class="dpad hidden" id="dpadP2">
+          <span class="dpad-label p2-label">P2</span>
+          <div class="dpad-grid">
+            <div></div>
+            <button class="dpad-btn p2-dpad-btn" id="p2DpadUp"    title="Up">↑</button>
+            <div></div>
+            <button class="dpad-btn p2-dpad-btn" id="p2DpadLeft"  title="Left">←</button>
+            <div class="dpad-center"></div>
+            <button class="dpad-btn p2-dpad-btn" id="p2DpadRight" title="Right">→</button>
+            <div></div>
+            <button class="dpad-btn p2-dpad-btn" id="p2DpadDown"  title="Down">↓</button>
+            <div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="snake.js"></script>
+  </body>
+</html>
