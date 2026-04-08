@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🏓 Ping Pong</title>
+    <link rel="stylesheet" href="../shared/theme.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="wrapper">
+
+      <!-- ── Header ───────────────────────────────────────────────── -->
+      <header class="header">
+        <a class="btn-icon" href="../index.html" title="Back to Home">🏠</a>
+
+        <!-- Left score | title + badge | Right score -->
+        <div class="score-board">
+          <div class="score-side">
+            <span class="score-label p1-label" id="labelP1">P1</span>
+            <span class="score-value" id="scoreP1">0</span>
+          </div>
+
+          <span class="score-sep">·</span>
+
+          <div class="title-group">
+            <h1 class="title">🏓 Pong</h1>
+            <span class="speed-badge" id="speedBadge">Lv. 1</span>
+          </div>
+
+          <span class="score-sep">·</span>
+
+          <div class="score-side">
+            <span class="score-label p2-label" id="labelP2">P2</span>
+            <span class="score-value" id="scoreP2">0</span>
+          </div>
+        </div>
+
+        <!-- pause button -->
+        <button class="btn-icon" id="btnPause" title="Pause (P)" disabled>⏸</button>
+      </header>
+
+      <!-- ── Canvas ───────────────────────────────────────────────── -->
+      <div class="canvas-container">
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- Start / Game-over overlay -->
+        <div class="overlay" id="overlay">
+          <div class="overlay-card">
+            <p class="overlay-emoji" id="overlayEmoji">🏓</p>
+            <h2 class="overlay-title" id="overlayTitle">Ping Pong</h2>
+            <p class="overlay-subtitle" id="overlaySubtitle">First to 10 wins!</p>
+
+            <!-- Mode toggle -->
+            <div class="mode-toggle">
+              <button class="mode-btn active" id="modeComputer">vs 🤖 Computer</button>
+              <button class="mode-btn"        id="modePlayer">vs 👤 Player</button>
+            </div>
+
+            <!-- Color pickers -->
+            <div class="color-pickers">
+              <div class="color-picker-row">
+                <p class="color-picker-label p1-label">Your Paddle (P1)</p>
+                <div class="color-swatches" id="swatchesP1"></div>
+              </div>
+              <div class="color-picker-row" id="p2ColorPicker">
+                <p class="color-picker-label p2-label">P2 Paddle</p>
+                <div class="color-swatches" id="swatchesP2"></div>
+              </div>
+              <div class="color-picker-row">
+                <p class="color-picker-label" style="color:#94a3b8">Ball</p>
+                <div class="color-swatches" id="swatchesBall"></div>
+              </div>
+            </div>
+
+            <p class="overlay-final hidden" id="overlayFinal"></p>
+            <button class="btn-primary" id="btnStart">Start Game</button>
+          </div>
+        </div>
+
+        <!-- Pause overlay -->
+        <div class="overlay hidden" id="pauseOverlay">
+          <div class="overlay-card">
+            <p class="overlay-emoji">⏸</p>
+            <h2 class="overlay-title">Paused</h2>
+            <p class="overlay-subtitle">Press <strong>P</strong> or click to resume</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── D-pad controls ────────────────────────────────────────── -->
+      <div class="controls">
+        <!-- P1 up/down -->
+        <div class="dpad" id="dpadP1">
+          <span class="dpad-label p1-label">P1</span>
+          <div class="dpad-col">
+            <button class="dpad-btn p1-dpad-btn" id="p1DpadUp"   title="Up">↑</button>
+            <button class="dpad-btn p1-dpad-btn" id="p1DpadDown" title="Down">↓</button>
+          </div>
+        </div>
+
+        <!-- P2 up/down (hidden in vs-computer mode) -->
+        <div class="dpad hidden" id="dpadP2">
+          <span class="dpad-label p2-label">P2</span>
+          <div class="dpad-col">
+            <button class="dpad-btn p2-dpad-btn" id="p2DpadUp"   title="Up">↑</button>
+            <button class="dpad-btn p2-dpad-btn" id="p2DpadDown" title="Down">↓</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Footer ───────────────────────────────────────────────── -->
+      <footer class="footer">
+        <span class="p1-label">P1</span> W / S or ↑↓ button &nbsp;·&nbsp;
+        <span class="p2-label">P2</span> ↑ / ↓ arrow keys or ↑↓ button &nbsp;·&nbsp;
+        First to <strong>10</strong> wins!
+      </footer>
+
+    </div>
+    <script type="module" src="game.js"></script>
+  </body>
+</html>

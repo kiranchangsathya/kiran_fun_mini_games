@@ -1,0 +1,178 @@
+/* pong/style.css — pong-specific layout only.
+   Shared tokens, reset, overlay, badge, button styles from shared/theme.css */
+
+body { height: 100vh; overflow: hidden; }
+
+/* ── Wrapper ──────────────────────────────────────────────────────── */
+.wrapper {
+  --game-w: min(860px, calc(100vw - 32px));
+  --game-h: min(480px, calc(100vh - 230px));
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Header ──────────────────────────────────────────────────────── */
+.header {
+  width: 100%;
+  max-width: var(--game-w);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.btn-icon:hover { border-color: #38bdf8; background: var(--clr-surface-2); }
+
+.title-group { display: flex; align-items: center; gap: 8px; }
+.title { font-size: 1.5rem; font-weight: 700; color: #38bdf8; }
+
+/* ── Score board (left score | title+badge | right score) ────────── */
+.score-board {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.score-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.2;
+  min-width: 48px;
+}
+
+.score-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #64748b;
+}
+
+.score-value {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #f1f5f9;
+  min-width: 2ch;
+  text-align: center;
+}
+
+.score-sep {
+  font-size: 1.5rem;
+  color: #334155;
+}
+
+/* ── Canvas container ────────────────────────────────────────────── */
+.canvas-container {
+  width:  var(--game-w);
+  height: var(--game-h);
+  box-shadow: 0 0 40px rgba(56, 189, 248, 0.15);
+}
+
+/* Overlay scrolls so color-pickers fit on small screens */
+.overlay { align-items: flex-start; overflow-y: auto; }
+
+/* Pong primary button — sky blue */
+.btn-primary { margin-top: 8px; background: #38bdf8; color: #0f172a; }
+.btn-primary:hover { background: #0ea5e9; }
+
+/* ── Mode toggle ──────────────────────────────────────────────────── */
+.mode-toggle {
+  display: flex;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid #334155;
+}
+
+.mode-btn {
+  flex: 1;
+  padding: 8px 20px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  border: none;
+  background: #1e293b;
+  color: #64748b;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.mode-btn.active        { background: #38bdf8; color: #0f172a; }
+.mode-btn:not(.active):hover { background: #263548; color: #e2e8f0; }
+
+/* ── Color pickers ──────────────────────────────────────────────── */
+.color-pickers { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
+.color-picker-row { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+
+.color-picker-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: #64748b;
+}
+
+.color-swatches { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+
+.color-swatch {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+  outline: none;
+}
+.color-swatch:hover   { transform: scale(1.2); }
+.color-swatch.selected {
+  border-color: #ffffff;
+  transform: scale(1.2);
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.25);
+}
+
+/* ── D-pad controls (up/down only for pong) ─────────────────────── */
+.controls {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+  justify-content: center;
+}
+
+.dpad { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+
+.dpad-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.dpad-col { display: flex; flex-direction: column; gap: 6px; }
+
+.dpad-btn {
+  width: 56px; height: 44px;
+  font-size: 1.25rem;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s, filter 0.15s;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+.dpad-btn:active { transform: scale(0.85); }
+
+.p1-dpad-btn { background: #166534; color: #dcfce7; border-color: #14532d; }
+.p1-dpad-btn:hover { filter: brightness(1.25); }
+
+.p2-dpad-btn { background: #1e3a8a; color: #dbeafe; border-color: #1e40af; }
+.p2-dpad-btn:hover { filter: brightness(1.25); }
+
+/* ── Footer ─────────────────────────────────────────────────────── */
+.footer { font-size: 0.78rem; color: #475569; text-align: center; }

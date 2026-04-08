@@ -34,4 +34,13 @@ export const GAMES = [
     href:        './dino/index.html',
     controls:    'Space · Arrow Up · Jump button',
   },
+  {
+    id:          'pong',
+    name:        'Ping Pong',
+    emoji:       '🏓',
+    accentColor: '#38bdf8',
+    description: 'Classic 1v1 or vs-computer paddle battle.<br>First to 10 wins — pick your colors!',
+    href:        './pong/index.html',
+    controls:    'W/S · Arrow keys · D-pad',
+  },
 ];
