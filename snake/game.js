@@ -46,6 +46,8 @@ function getRefs() {
     pauseOverlay:    g('pauseOverlay'),
     score1El:        g('score1'),
     score2El:        g('score2'),
+    lives1El:        g('lives1'),
+    lives2El:        g('lives2'),
     wins1El:         g('wins1'),
     wins2El:         g('wins2'),
     label1El:        g('label1'),
@@ -119,14 +121,16 @@ class SnakeGame extends GameBase {
 
     const midY = Math.floor(ROWS / 2);
     this._players = [{
-      name: name1, score: 0, color: PALETTES[this._p1Palette],
+      name: name1, score: 0, lives: 3, invincible: 0,
+      color: PALETTES[this._p1Palette],
       snake: [{ x: 4, y: midY }, { x: 3, y: midY }, { x: 2, y: midY }],
       dir: RIGHT, nextDir: RIGHT,
     }];
     if (this._gameMode === 'duo') {
       const p2x = COLS - 5;
       this._players.push({
-        name: name2, score: 0, color: PALETTES[this._p2Palette],
+        name: name2, score: 0, lives: 3, invincible: 0,
+        color: PALETTES[this._p2Palette],
         snake: [{ x: p2x, y: midY }, { x: p2x+1, y: midY }, { x: p2x+2, y: midY }],
         dir: LEFT, nextDir: LEFT,
       });
@@ -135,6 +139,7 @@ class SnakeGame extends GameBase {
     r.label1El.textContent = name1;
     if (this._gameMode === 'duo') r.label2El.textContent = name2;
     this._updateScoreDisplay();
+    this._updateLivesDisplay();
     this._spawnFood();
   }
 
@@ -146,26 +151,44 @@ class SnakeGame extends GameBase {
     const players = this._players;
     for (const p of players) p.dir = p.nextDir;
 
-    const heads = players.map(p => ({ x: p.snake[0].x + p.dir.x, y: p.snake[0].y + p.dir.y }));
-    const dead  = players.map(() => false);
+    // Wrap-around: head leaving one edge reappears on the opposite side
+    const heads = players.map(p => ({
+      x: (p.snake[0].x + p.dir.x + COLS) % COLS,
+      y: (p.snake[0].y + p.dir.y + ROWS) % ROWS,
+    }));
+    const dead = players.map(() => false);
 
-    players.forEach((p, i) => { if (this._hitsWall(heads[i])) dead[i] = true; });
+    // Tick down invincibility timers
+    for (const p of players) if (p.invincible > 0) p.invincible--;
+
+    // Self-collision (skip while invincible)
     players.forEach((p, i) => {
-      if (!dead[i] && p.snake.some(s => s.x === heads[i].x && s.y === heads[i].y)) dead[i] = true;
+      if (p.invincible > 0) return;
+      if (p.snake.some(s => s.x === heads[i].x && s.y === heads[i].y)) dead[i] = true;
     });
 
     if (this._gameMode === 'duo') {
-      if (!dead[0] && !dead[1] && heads[0].x === heads[1].x && heads[0].y === heads[1].y)
+      // Head-on collision (only when neither player is invincible)
+      if (!dead[0] && !dead[1] &&
+          players[0].invincible === 0 && players[1].invincible === 0 &&
+          heads[0].x === heads[1].x && heads[0].y === heads[1].y)
         dead[0] = dead[1] = true;
+      // Hit other player's body (skip while invincible)
       players.forEach((_, i) => {
+        if (players[i].invincible > 0) return;
         const other = players[1 - i];
         if (!dead[i] && other.snake.some(s => s.x === heads[i].x && s.y === heads[i].y)) dead[i] = true;
       });
     }
 
-    if (dead.some(Boolean)) { this._handleDeath(dead); return; }
+    if (dead.some(Boolean)) {
+      this._handleDeath(dead);
+      if (this._state !== STATE.RUNNING) return;  // game ended — don't advance
+    }
 
+    // Only advance snakes that did NOT collide this tick
     players.forEach((p, i) => {
+      if (dead[i]) return;
       p.snake.unshift(heads[i]);
       if (heads[i].x === this._food.x && heads[i].y === this._food.y) {
         p.score++;
@@ -256,24 +279,54 @@ class SnakeGame extends GameBase {
   }
 
   _handleDeath(dead) {
-    const [p1, p2] = this._players;
+    const players = this._players;
+
+    // Deduct a life, shrink to 3 segments, and grant invincibility
+    dead.forEach((isDead, i) => {
+      if (!isDead) return;
+      const p = players[i];
+      p.lives = Math.max(0, p.lives - 1);
+      p.snake  = p.snake.slice(0, 3);   // shrink back to starting size
+      p.invincible = 80;                 // ~1.5 s at default tick rate
+    });
+
+    this._updateLivesDisplay();
+
+    // Check whether any player has run out of lives
+    const out = dead.map((isDead, i) => isDead && players[i].lives <= 0);
+    if (!out.some(Boolean)) return;     // everyone still has lives — game continues
+
+    const [p1, p2] = players;
     let result;
     if (this._gameMode === 'solo') {
-      result = { emoji: '💀', title: 'Game Over', subtitle: `${p1.name}'s snake crashed`,
-                 finalScore: `${p1.name}: ${p1.score}`, buttonLabel: 'Play Again' };
+      result = { emoji: '💀', title: 'Game Over',
+                 subtitle: `${p1.name} ran out of lives!`,
+                 finalScore: `Score: ${p1.score}`, buttonLabel: 'Play Again' };
     } else {
-      if (dead[0] && dead[1]) {
-        result = { emoji: '🤝', title: "It's a Draw!", subtitle: 'Both snakes crashed',
-                   finalScore: `${p1.name}: ${p1.score}  ·  ${p2.name}: ${p2.score}`, buttonLabel: 'Play Again' };
+      if (out[0] && out[1]) {
+        result = { emoji: '🤝', title: "It's a Draw!",
+                   subtitle: 'Both players ran out of lives',
+                   finalScore: `${p1.name}: ${p1.score}  ·  ${p2.name}: ${p2.score}`,
+                   buttonLabel: 'Play Again' };
       } else {
-        const winner = dead[0] ? p2 : p1;
-        const loser  = dead[0] ? p1 : p2;
+        const winnerIdx = out[0] ? 1 : 0;
+        const winner = players[winnerIdx];
+        const loser  = players[1 - winnerIdx];
         this._recordWin(winner.name);
-        result = { emoji: '🏆', title: `${winner.name} Wins!`, subtitle: `${loser.name}'s snake crashed`,
-                   finalScore: `${p1.name}: ${p1.score}  ·  ${p2.name}: ${p2.score}`, buttonLabel: 'Play Again' };
+        result = { emoji: '🏆', title: `${winner.name} Wins!`,
+                   subtitle: `${loser.name} ran out of lives`,
+                   finalScore: `${p1.name}: ${p1.score}  ·  ${p2.name}: ${p2.score}`,
+                   buttonLabel: 'Play Again' };
       }
     }
     this.end(result);
+  }
+
+  _updateLivesDisplay() {
+    const r = this._r;
+    const hearts = n => '❤️'.repeat(Math.max(0, n)) + '🖤'.repeat(Math.max(0, 3 - n));
+    if (r.lives1El) r.lives1El.textContent = hearts(this._players[0].lives);
+    if (r.lives2El && this._players[1]) r.lives2El.textContent = hearts(this._players[1].lives);
   }
 
   _recordWin(name) {
@@ -354,23 +407,68 @@ class SnakeGame extends GameBase {
   }
 
   _drawSnake(player) {
+    // Flash every 5 frames while invincible so the player knows they're protected
+    if (player.invincible > 0 && Math.floor(player.invincible / 5) % 2 === 0) return;
     const ctx = this.ctx;
     const { snake, color } = player;
     const half = CELL / 2, thickness = CELL - 2;
+
     ctx.save();
     ctx.lineWidth = thickness; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
     ctx.strokeStyle = color.body;
+
+    // Draw body — break the path wherever a wall-wrap happened so we never
+    // draw a line that crosses the whole canvas.
     ctx.beginPath();
     for (let i = snake.length - 1; i >= 0; i--) {
       const cx = snake[i].x * CELL + half, cy = snake[i].y * CELL + half;
-      i === snake.length - 1 ? ctx.moveTo(cx, cy) : ctx.lineTo(cx, cy);
+      const isFirst = i === snake.length - 1;
+      const wraps   = !isFirst &&
+        (Math.abs(snake[i].x - snake[i + 1].x) > 1 ||
+         Math.abs(snake[i].y - snake[i + 1].y) > 1);
+      isFirst || wraps ? ctx.moveTo(cx, cy) : ctx.lineTo(cx, cy);
     }
     ctx.stroke();
+
+    // Draw a portal glow at both sides of every wall-crossing pair
+    for (let i = 0; i < snake.length - 1; i++) {
+      if (Math.abs(snake[i].x - snake[i + 1].x) > 1 ||
+          Math.abs(snake[i].y - snake[i + 1].y) > 1) {
+        this._drawPortalGlow(snake[i].x     * CELL + half, snake[i].y     * CELL + half, color);
+        this._drawPortalGlow(snake[i + 1].x * CELL + half, snake[i + 1].y * CELL + half, color);
+      }
+    }
+
+    // Head circle
     const { x: hx, y: hy } = snake[0];
     ctx.fillStyle = color.head;
-    ctx.beginPath(); ctx.arc(hx * CELL + half, hy * CELL + half, thickness / 2, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath();
+    ctx.arc(hx * CELL + half, hy * CELL + half, thickness / 2, 0, Math.PI * 2);
+    ctx.fill();
     ctx.restore();
     this._drawEyes(snake[0], player.dir);
+  }
+
+  /** Radial glow drawn at a wall-crossing cell to sell the teleport illusion. */
+  _drawPortalGlow(cx, cy, color) {
+    const ctx = this.ctx;
+    // Parse the hex head colour so we can build an rgba gradient
+    const hex = color.head.replace('#', '');
+    const r   = parseInt(hex.slice(0, 2), 16);
+    const g   = parseInt(hex.slice(2, 4), 16);
+    const b   = parseInt(hex.slice(4, 6), 16);
+
+    ctx.save();
+    const radius = CELL * 0.9;
+    const grad   = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
+    grad.addColorStop(0,    `rgba(255,255,255,0.90)`);   // bright white core
+    grad.addColorStop(0.30, `rgba(${r},${g},${b},0.70)`); // snake colour mid
+    grad.addColorStop(1,    `rgba(${r},${g},${b},0.00)`); // fade to transparent
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
   }
 
   _drawEyes(head, dir) {

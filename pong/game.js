@@ -216,6 +216,7 @@ class PongGame extends GameBase {
     this._p2 = { y: midY, dy: 0, vy: 0 };
     this._aiTargetY    = CANVAS_H / 2 - PADDLE_H_NORMAL / 2;
     this._aiUpdateTimer = 0;
+    this._hitCount     = 0;   // cumulative paddle hits — drives rally speed boosts
     this._launchBall();
   }
 
@@ -284,10 +285,12 @@ class PongGame extends GameBase {
       this._aiUpdateTimer = 0;   // re-sample immediately when ball turns
     }
 
+    const prevY   = this._p2.y;
     const diff    = this._aiTargetY - this._p2.y;
     const maxStep = this._paddleSpeed * 0.58;   // 58% — can't cover full canvas in time
     this._p2.y += Math.max(-maxStep, Math.min(maxStep, diff));
     this._p2.y  = Math.max(0, Math.min(CANVAS_H - this._paddleH, this._p2.y));
+    this._p2.dy = this._p2.y - prevY;   // actual velocity this frame (used for spin)
   }
 
   _moveBall() {
@@ -308,10 +311,9 @@ class PongGame extends GameBase {
     const p1x = PADDLE_X_OFFSET;
     if (b.vx < 0 && b.x - BALL_R <= p1x + PADDLE_W && b.x + BALL_R >= p1x) {
       if (b.y + BALL_R >= this._p1.y && b.y - BALL_R <= this._p1.y + ph) {
-        b.x  = p1x + PADDLE_W + BALL_R;
-        const hitPos = (b.y - (this._p1.y + ph / 2)) / (ph / 2);  // -1…+1
-        const angle  = hitPos * Math.PI / 4;
-        const spd    = this._ballSpeed;
+        b.x = p1x + PADDLE_W + BALL_R;
+        const spd = this._onPaddleHit();
+        const angle = this._deflectAngle(b.y, this._p1.y, ph, this._p1.dy);
         b.vx =  Math.cos(angle) * spd;
         b.vy =  Math.sin(angle) * spd;
       }
@@ -321,10 +323,9 @@ class PongGame extends GameBase {
     const p2x = CANVAS_W - PADDLE_X_OFFSET - PADDLE_W;
     if (b.vx > 0 && b.x + BALL_R >= p2x && b.x - BALL_R <= p2x + PADDLE_W) {
       if (b.y + BALL_R >= this._p2.y && b.y - BALL_R <= this._p2.y + ph) {
-        b.x  = p2x - BALL_R;
-        const hitPos = (b.y - (this._p2.y + ph / 2)) / (ph / 2);
-        const angle  = hitPos * Math.PI / 4;
-        const spd    = this._ballSpeed;
+        b.x = p2x - BALL_R;
+        const spd = this._onPaddleHit();
+        const angle = this._deflectAngle(b.y, this._p2.y, ph, this._p2.dy);
         b.vx = -Math.cos(angle) * spd;
         b.vy =  Math.sin(angle) * spd;
       }
@@ -338,6 +339,44 @@ class PongGame extends GameBase {
       this._scoreP1++;
       this._onScore();
     }
+  }
+
+  /**
+   * Called on every paddle hit.
+   * Increments the hit counter and boosts ball speed every 10 hits.
+   * Returns the speed to apply for this hit.
+   */
+  _onPaddleHit() {
+    this._hitCount++;
+    if (this._hitCount % 10 === 0) {
+      // +0.8 px/frame every 10 rally hits, capped at 22
+      this._ballSpeed = Math.min(this._ballSpeed + 0.8, 22);
+    }
+    return this._ballSpeed;
+  }
+
+  /**
+   * Compute the deflection angle for a ball hitting a paddle.
+   * @param {number} ballY      - ball centre y
+   * @param {number} paddleY    - paddle top y
+   * @param {number} paddleH    - current paddle height
+   * @param {number} paddleDy   - paddle velocity this frame (negative = moving up)
+   * @returns {number} angle in radians
+   */
+  _deflectAngle(ballY, paddleY, paddleH, paddleDy) {
+    // Where on the paddle the ball hit: -1 (top) … 0 (centre) … +1 (bottom)
+    const hitPos = (ballY - (paddleY + paddleH / 2)) / (paddleH / 2);
+
+    // Base angle from hit position: ±45°
+    const baseAngle = hitPos * (Math.PI / 4);
+
+    // Spin from paddle movement: moving paddle adds up to ±25° extra
+    // Normalise dy against paddleSpeed so the effect is speed-independent
+    const spinRatio = this._paddleSpeed > 0 ? paddleDy / this._paddleSpeed : 0;
+    const spinAngle = spinRatio * (Math.PI / 7.2);   // ±25°
+
+    // Clamp total angle to ±60° so the ball never goes nearly horizontal
+    return Math.max(-Math.PI / 3, Math.min(Math.PI / 3, baseAngle + spinAngle));
   }
 
   _onScore() {
