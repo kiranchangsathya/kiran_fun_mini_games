@@ -63,13 +63,13 @@ function initGame() {
   legFrame = 0;
   legTimer = 0;
 
-  cacti           = [];
-  scrolledPx      = 0;
-  distToNextSpawn = randomSpawnGap();
-
   score       = 0;
   level       = 0;
   speed       = SPEEDS[0];
+
+  cacti           = [];
+  scrolledPx      = 0;
+  distToNextSpawn = randomSpawnGap();
   gameRunning = true;
 
   updateScoreEl();
