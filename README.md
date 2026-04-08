@@ -10,6 +10,7 @@ A collection of browser-based arcade games built with vanilla HTML, CSS, and Jav
 |---|---|
 | 🐍 **Snake** | Eat food, grow your snake, don't crash. Solo or 2-player mode. |
 | 🦕 **Dino Run** | Jump over cacti and survive as long as you can. Speed increases as you level up. |
+| 🏓 **Ping Pong** | Classic paddle battle — vs computer or vs a friend. First to 10 wins! Speed increases every 20 points and paddles shrink at 100. |
 
 ---
 
@@ -70,6 +71,17 @@ Then open the URL shown in the terminal (usually `http://localhost:3000`).
 | Jump | `Space` or `↑` Arrow |
 | Jump (mouse/touch) | **⬆ JUMP** button |
 
+### 🏓 Ping Pong
+
+| Action | Player 1 (left) | Player 2 / Computer (right) |
+|---|---|---|
+| Move Up | `W` | `↑` Arrow |
+| Move Down | `S` | `↓` Arrow |
+| Move (mouse/touch) | P1 green ↑↓ buttons | P2 blue ↑↓ buttons (1v1 only) |
+| Pause | `P` or `Esc` | `P` or `Esc` |
+
+**Tips to beat the computer:** Hit the ball toward the top or bottom corner while the AI is drifting back to centre — it only refreshes its target every 12 frames and can't cover the full canvas in time.
+
 ---
 
 ## 📁 Project Structure
@@ -90,9 +102,14 @@ games/
 │   ├── game.js         # SnakeGame extends GameBase
 │   └── style.css
 │
-└── dino/
+├── dino/
+│   ├── index.html
+│   ├── game.js         # DinoGame extends GameBase
+│   └── style.css
+│
+└── pong/
     ├── index.html
-    ├── game.js         # DinoGame extends GameBase
+    ├── game.js         # PongGame extends GameBase
     └── style.css
 ```
 
