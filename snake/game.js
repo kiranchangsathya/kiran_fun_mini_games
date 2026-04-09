@@ -120,19 +120,29 @@ class SnakeGame extends GameBase {
     r.nameP2.value = name2;
 
     const midY = Math.floor(ROWS / 2);
-    this._players = [{
-      name: name1, score: 0, lives: 3, invincible: 0,
-      color: PALETTES[this._p1Palette],
+    const p1Spawn = {
       snake: [{ x: 4, y: midY }, { x: 3, y: midY }, { x: 2, y: midY }],
-      dir: RIGHT, nextDir: RIGHT,
+      dir: RIGHT,
+    };
+    this._players = [{
+      name: name1, score: 0, lives: 3, grace: 0,
+      color: PALETTES[this._p1Palette],
+      spawn: p1Spawn,
+      snake: p1Spawn.snake.map(s => ({ ...s })),
+      dir: p1Spawn.dir, nextDir: p1Spawn.dir,
     }];
     if (this._gameMode === 'duo') {
       const p2x = COLS - 5;
-      this._players.push({
-        name: name2, score: 0, lives: 3, invincible: 0,
-        color: PALETTES[this._p2Palette],
+      const p2Spawn = {
         snake: [{ x: p2x, y: midY }, { x: p2x+1, y: midY }, { x: p2x+2, y: midY }],
-        dir: LEFT, nextDir: LEFT,
+        dir: LEFT,
+      };
+      this._players.push({
+        name: name2, score: 0, lives: 3, grace: 0,
+        color: PALETTES[this._p2Palette],
+        spawn: p2Spawn,
+        snake: p2Spawn.snake.map(s => ({ ...s })),
+        dir: p2Spawn.dir, nextDir: p2Spawn.dir,
       });
     }
 
@@ -158,26 +168,28 @@ class SnakeGame extends GameBase {
     }));
     const dead = players.map(() => false);
 
-    // Tick down invincibility timers
-    for (const p of players) if (p.invincible > 0) p.invincible--;
+    // Tick down post-death grace counters
+    for (const p of players) if (p.grace > 0) p.grace--;
 
-    // Self-collision (skip while invincible)
+    // Self-collision (exclude the tail — it vacates its cell this same tick)
     players.forEach((p, i) => {
-      if (p.invincible > 0) return;
-      if (p.snake.some(s => s.x === heads[i].x && s.y === heads[i].y)) dead[i] = true;
+      if (p.grace > 0) return;                       // still in grace period
+      const body = p.snake.slice(0, -1);
+      if (body.some(s => s.x === heads[i].x && s.y === heads[i].y)) dead[i] = true;
     });
 
     if (this._gameMode === 'duo') {
-      // Head-on collision (only when neither player is invincible)
+      // Head-on collision (only when neither player is in grace)
       if (!dead[0] && !dead[1] &&
-          players[0].invincible === 0 && players[1].invincible === 0 &&
+          players[0].grace === 0 && players[1].grace === 0 &&
           heads[0].x === heads[1].x && heads[0].y === heads[1].y)
         dead[0] = dead[1] = true;
-      // Hit other player's body (skip while invincible)
+      // Hit other player's body (exclude their tail too — it vacates this tick)
       players.forEach((_, i) => {
-        if (players[i].invincible > 0) return;
+        if (players[i].grace > 0) return;            // still in grace period
         const other = players[1 - i];
-        if (!dead[i] && other.snake.some(s => s.x === heads[i].x && s.y === heads[i].y)) dead[i] = true;
+        const otherBody = other.snake.slice(0, -1);
+        if (!dead[i] && otherBody.some(s => s.x === heads[i].x && s.y === heads[i].y)) dead[i] = true;
       });
     }
 
@@ -186,7 +198,7 @@ class SnakeGame extends GameBase {
       if (this._state !== STATE.RUNNING) return;  // game ended — don't advance
     }
 
-    // Only advance snakes that did NOT collide this tick
+    // Advance living snakes only; dead snakes were already respawned to a safe position
     players.forEach((p, i) => {
       if (dead[i]) return;
       p.snake.unshift(heads[i]);
@@ -281,13 +293,16 @@ class SnakeGame extends GameBase {
   _handleDeath(dead) {
     const players = this._players;
 
-    // Deduct a life, shrink to 3 segments, and grant invincibility
+    // Deduct a life, respawn at safe position, grant brief grace period
     dead.forEach((isDead, i) => {
       if (!isDead) return;
       const p = players[i];
-      p.lives = Math.max(0, p.lives - 1);
-      p.snake  = p.snake.slice(0, 3);   // shrink back to starting size
-      p.invincible = 80;                 // ~1.5 s at default tick rate
+      p.lives   = Math.max(0, p.lives - 1);
+      // Respawn at the safe starting position so the snake is never stuck in the collision zone
+      p.snake   = p.spawn.snake.map(s => ({ ...s }));
+      p.dir     = p.spawn.dir;
+      p.nextDir = p.spawn.dir;
+      p.grace   = 3;                    // 3 ticks of invisible collision immunity
     });
 
     this._updateLivesDisplay();

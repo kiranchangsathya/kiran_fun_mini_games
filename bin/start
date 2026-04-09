@@ -7,6 +7,6 @@ if [ -f "$PID_FILE" ] && kill -0 "$(cat "$PID_FILE")" 2>/dev/null; then
   exit 0
 fi
 
-npx serve "$ROOT" -p 3000 &
+python3 -m http.server 3000 --directory "$ROOT" &
 echo $! > "$PID_FILE"
 echo "Server started on http://localhost:3000 (PID $(cat "$PID_FILE"))"
