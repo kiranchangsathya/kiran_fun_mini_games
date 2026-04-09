@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+PID_FILE="$ROOT/bin/.server.pid"
+
+if [ -f "$PID_FILE" ] && kill -0 "$(cat "$PID_FILE")" 2>/dev/null; then
+  echo "Server is already running (PID $(cat "$PID_FILE"))"
+  exit 0
+fi
+
+npx serve "$ROOT" -p 3000 &
+echo $! > "$PID_FILE"
+echo "Server started on http://localhost:3000 (PID $(cat "$PID_FILE"))"
