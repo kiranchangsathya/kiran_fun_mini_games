@@ -422,8 +422,6 @@ class SnakeGame extends GameBase {
   }
 
   _drawSnake(player) {
-    // Flash every 5 frames while invincible so the player knows they're protected
-    if (player.invincible > 0 && Math.floor(player.invincible / 5) % 2 === 0) return;
     const ctx = this.ctx;
     const { snake, color } = player;
     const half = CELL / 2, thickness = CELL - 2;
