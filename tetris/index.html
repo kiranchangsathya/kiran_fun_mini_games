@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tetris</title>
+    <link rel="stylesheet" href="../shared/theme.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="wrapper">
+
+      <header class="header">
+        <a class="btn-icon" href="../index.html" title="Back to Home">🏠</a>
+        <div class="title-group">
+          <h1 class="title">🟪 Tetris</h1>
+          <span class="speed-badge" id="speedBadge">Lv. 1</span>
+        </div>
+        <button class="btn-icon" id="btnPause" title="Pause (P)" disabled>⏸</button>
+      </header>
+
+      <!-- Canvas + HUD side by side -->
+      <div class="game-area">
+
+        <!-- Main game canvas -->
+        <div class="canvas-container">
+          <canvas id="gameCanvas"></canvas>
+
+          <!-- Start / Game-over overlay -->
+          <div class="overlay" id="overlay">
+            <div class="overlay-card">
+              <p class="overlay-emoji" id="overlayEmoji">🟪</p>
+              <h2 class="overlay-title" id="overlayTitle">Tetris</h2>
+              <p class="overlay-subtitle" id="overlaySubtitle">Stack blocks and clear lines!</p>
+              <p class="overlay-final hidden" id="overlayFinal"></p>
+              <button class="btn-primary" id="btnStart">Start Game</button>
+            </div>
+          </div>
+
+          <!-- Pause overlay -->
+          <div class="overlay hidden" id="pauseOverlay">
+            <div class="overlay-card">
+              <p class="overlay-emoji">⏸</p>
+              <h2 class="overlay-title">Paused</h2>
+              <p class="overlay-subtitle">Press <strong>P</strong> or click to resume</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Side HUD: next piece + stats -->
+        <div class="hud">
+          <div class="hud-section">
+            <p class="hud-label">Next</p>
+            <canvas id="nextCanvas" width="80" height="80"></canvas>
+          </div>
+          <div class="hud-section">
+            <p class="hud-label">Score</p>
+            <p class="hud-value" id="scoreEl">0</p>
+          </div>
+          <div class="hud-section">
+            <p class="hud-label">Lines</p>
+            <p class="hud-value" id="linesEl">0</p>
+          </div>
+          <div class="hud-section">
+            <p class="hud-label">Level</p>
+            <p class="hud-value" id="levelEl">1</p>
+          </div>
+        </div>
+
+      </div><!-- /.game-area -->
+
+      <footer class="footer">
+        ← → Move &nbsp;·&nbsp; ↑ / X Rotate &nbsp;·&nbsp; ↓ Soft drop &nbsp;·&nbsp; Space Hard drop &nbsp;·&nbsp; P Pause
+      </footer>
+
+      <!-- On-screen controls -->
+      <div class="controls">
+        <button class="ctrl-btn ctrl-rotate" id="btnRotate" title="Rotate">↻</button>
+        <div class="ctrl-row">
+          <button class="ctrl-btn" id="btnLeft"  title="Move Left">←</button>
+          <button class="ctrl-btn" id="btnDown"  title="Soft Drop">↓</button>
+          <button class="ctrl-btn" id="btnRight" title="Move Right">→</button>
+        </div>
+        <button class="ctrl-btn ctrl-drop" id="btnDrop" title="Hard Drop">⬇ Drop</button>
+      </div>
+
+    </div><!-- /.wrapper -->
+
+    <script type="module" src="game.js"></script>
+  </body>
+</html>

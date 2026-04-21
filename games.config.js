@@ -43,4 +43,13 @@ export const GAMES = [
     href:        './pong/index.html',
     controls:    'W/S · Arrow keys · D-pad',
   },
+  {
+    id:          'tetris',
+    name:        'Tetris',
+    emoji:       '🟪',
+    accentColor: '#a855f7',
+    description: 'Stack falling blocks and clear lines!<br>Speed increases as you level up.',
+    href:        './tetris/index.html',
+    controls:    '← → Move · ↑ Rotate · ↓ Soft drop · Space Hard drop',
+  },
 ];
