@@ -52,4 +52,13 @@ export const GAMES = [
     href:        './tetris/index.html',
     controls:    '← → Move · ↑ Rotate · ↓ Soft drop · Space Hard drop',
   },
+  {
+    id:          'tictactoe',
+    name:        'Tic Tac Toe',
+    emoji:       '⭕',
+    accentColor: '#facc15',
+    description: 'Get 3 in a row to win!<br>Play vs an unbeatable computer or a friend.',
+    href:        './tictactoe/index.html',
+    controls:    'Click any cell to place your mark',
+  },
 ];

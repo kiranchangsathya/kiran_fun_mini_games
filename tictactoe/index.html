@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tic Tac Toe</title>
+    <link rel="stylesheet" href="../shared/theme.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="wrapper">
+
+      <header class="header">
+        <a class="btn-icon" href="../index.html" title="Back to Home">🏠</a>
+        <h1 class="title">⭕ Tic Tac Toe</h1>
+        <!-- Hidden speed badge – required by GameBase internals -->
+        <span class="speed-badge hidden" id="speedBadge"></span>
+
+        <!-- Score board: X wins · Draws · O wins -->
+        <div class="score-board">
+          <div class="score-pill x-pill">
+            <span class="pill-symbol">✕</span>
+            <span class="pill-label" id="nameX">Player 1</span>
+            <span class="pill-value" id="scoreX">0</span>
+          </div>
+          <div class="score-pill draw-pill">
+            <span class="pill-label">Draw</span>
+            <span class="pill-value" id="scoreDraw">0</span>
+          </div>
+          <div class="score-pill o-pill">
+            <span class="pill-symbol">○</span>
+            <span class="pill-label" id="nameO">Computer</span>
+            <span class="pill-value" id="scoreO">0</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Canvas + status text -->
+      <div class="canvas-wrapper">
+        <div class="canvas-container">
+          <canvas id="gameCanvas"></canvas>
+
+          <!-- Start / game-over overlay -->
+          <div class="overlay" id="overlay">
+            <div class="overlay-card">
+              <p class="overlay-emoji" id="overlayEmoji">⭕</p>
+              <h2 class="overlay-title" id="overlayTitle">Tic Tac Toe</h2>
+              <p class="overlay-subtitle" id="overlaySubtitle">Get 3 in a row to win!</p>
+
+              <!-- Mode toggle -->
+              <div class="mode-toggle">
+                <button class="mode-btn active" id="modeComputer">vs Computer</button>
+                <button class="mode-btn"        id="modeFriend">vs Friend</button>
+              </div>
+
+              <!-- Player name inputs -->
+              <div class="name-inputs">
+                <div class="name-field">
+                  <label class="name-label x-label" for="nameInputX">✕ Player</label>
+                  <input class="name-input" id="nameInputX"
+                         type="text" maxlength="12"
+                         placeholder="Player 1" value="Player 1" />
+                </div>
+                <div class="name-field">
+                  <label class="name-label o-label" for="nameInputO">
+                    ○ <span id="oLabelText">Computer</span>
+                  </label>
+                  <input class="name-input hidden" id="nameInputO"
+                         type="text" maxlength="12"
+                         placeholder="Player 2" value="Player 2" />
+                </div>
+              </div>
+
+              <p class="overlay-final hidden" id="overlayFinal"></p>
+              <button class="btn-primary" id="btnStart">Start Game</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Status message (whose turn, winner, etc.) -->
+        <p class="status-text" id="statusText">Get 3 in a row to win!</p>
+      </div>
+
+    </div><!-- /.wrapper -->
+
+    <script type="module" src="game.js"></script>
+  </body>
+</html>
