@@ -1,0 +1,180 @@
+/* sudoku/style.css — Sudoku layout & theme (blue accent).
+   Shared tokens, reset, overlay, and button styles come from theme.css. */
+
+:root {
+  --sudoku-accent:      #60a5fa;
+  --sudoku-accent-dark: #1d4ed8;
+  --cell-border-inner:  #334155;
+  --cell-border-box:    #94a3b8;
+}
+
+body { height: 100vh; overflow: hidden; }
+
+/* ── Wrapper ──────────────────────────────────────────────────────── */
+.wrapper {
+  --game-size: min(450px, calc(100vw - 32px), calc(100vh - 210px));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 12px 16px;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Header ──────────────────────────────────────────────────────── */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: calc(var(--game-size) + 60px);
+}
+
+.title { font-size: 1.35rem; font-weight: 700; color: var(--sudoku-accent); flex: 1; }
+.btn-icon:hover { border-color: var(--sudoku-accent); background: var(--clr-surface-2); }
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.diff-display {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 3px 9px;
+  border-radius: var(--radius-full);
+  background: var(--clr-surface);
+  color: var(--sudoku-accent);
+  border: 1px solid var(--sudoku-accent);
+}
+
+.timer-display {
+  font-size: 1rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--clr-text-muted);
+  min-width: 46px;
+  text-align: right;
+}
+
+/* ── Game area ───────────────────────────────────────────────────── */
+.game-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ── Sudoku container (positions the overlay over the grid) ──────── */
+.sudoku-container {
+  position: relative;
+  width:  var(--game-size);
+  height: var(--game-size);
+  border: 2px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 0 48px rgba(96, 165, 250, 0.15);
+}
+
+/* ── 9×9 grid ────────────────────────────────────────────────────── */
+.sudoku-grid {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  grid-template-rows:    repeat(9, 1fr);
+  width:  100%;
+  height: 100%;
+  background: var(--clr-surface);
+}
+
+/* ── Individual cells ────────────────────────────────────────────── */
+.sudoku-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(var(--game-size) / 18);
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--cell-border-inner);
+  user-select: none;
+  transition: background 0.08s;
+}
+
+/* Thick borders that draw the 3×3 box outlines */
+.sudoku-cell.box-top    { border-top:    2.5px solid var(--cell-border-box); }
+.sudoku-cell.box-left   { border-left:   2.5px solid var(--cell-border-box); }
+.sudoku-cell.box-bottom { border-bottom: 2.5px solid var(--cell-border-box); }
+.sudoku-cell.box-right  { border-right:  2.5px solid var(--cell-border-box); }
+
+/* Cell content states */
+.sudoku-cell.given   { color: #e2e8f0; }
+.sudoku-cell.user    { color: var(--sudoku-accent); }
+
+/* Interaction highlights (applied together — order matters) */
+.sudoku-cell.related   { background: #1a2744; }
+.sudoku-cell.same-num  { background: #1e3a6a; }
+.sudoku-cell.selected  { background: #1d4ed8; color: #fff; }
+.sudoku-cell.conflict  { background: #3b1515 !important; color: #f87171 !important; }
+
+/* ── Overlay additions (difficulty toggle) ───────────────────────── */
+.diff-toggle {
+  display: flex;
+  gap: 6px;
+  margin: 4px 0;
+}
+
+.diff-btn {
+  flex: 1;
+  padding: 7px 14px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  border: 2px solid var(--clr-border);
+  border-radius: var(--radius-md);
+  background: var(--clr-surface);
+  color: var(--clr-text-muted);
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+
+.diff-btn.active,
+.diff-btn:hover {
+  border-color: var(--sudoku-accent);
+  color: var(--sudoku-accent);
+  background: var(--clr-surface-2);
+}
+
+/* Primary button accent */
+.btn-primary {
+  background: var(--sudoku-accent);
+  color: var(--clr-text-dark);
+}
+
+/* ── Number pad ──────────────────────────────────────────────────── */
+.numpad {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  width: var(--game-size);
+}
+
+.num-btn {
+  padding: 10px 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border: 2px solid var(--clr-border);
+  border-radius: var(--radius-md);
+  background: var(--clr-surface);
+  color: var(--clr-text);
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+}
+
+.num-btn:hover  { background: var(--clr-surface-2); border-color: var(--sudoku-accent); }
+.num-btn:active { transform: scale(0.94); }
+
+.erase-btn { color: #f87171; border-color: #f87171; }
+.erase-btn:hover { border-color: #f87171; background: #2d1515; }

@@ -61,4 +61,13 @@ export const GAMES = [
     href:        './tictactoe/index.html',
     controls:    'Click any cell to place your mark',
   },
+  {
+    id:          'sudoku',
+    name:        'Sudoku',
+    emoji:       '🔢',
+    accentColor: '#60a5fa',
+    description: 'Fill the 9×9 grid with no repeats in any row, column, or box.<br>Easy, Medium, and Hard modes.',
+    href:        './sudoku/index.html',
+    controls:    'Click a cell · type 1–9 · arrow keys to navigate',
+  },
 ];

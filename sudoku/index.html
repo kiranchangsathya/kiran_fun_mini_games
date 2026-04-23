@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sudoku</title>
+    <link rel="stylesheet" href="../shared/theme.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="wrapper">
+
+      <header class="header">
+        <a class="btn-icon" href="../index.html" title="Back to Home">🏠</a>
+        <h1 class="title">🔢 Sudoku</h1>
+        <!-- Hidden – required by GameBase internals -->
+        <span class="speed-badge hidden" id="speedBadge"></span>
+        <div class="header-right">
+          <span class="diff-display" id="difficultyBadge">Easy</span>
+          <span class="timer-display" id="timerDisplay">00:00</span>
+        </div>
+      </header>
+
+      <div class="game-area">
+
+        <!-- Sudoku container: holds the grid + start/end overlay -->
+        <div class="sudoku-container">
+          <!-- Hidden canvas — required by GameBase; never rendered to -->
+          <canvas id="gameCanvas" width="1" height="1" class="hidden"></canvas>
+
+          <!-- 9×9 grid populated by game.js -->
+          <div class="sudoku-grid" id="sudokuGrid"></div>
+
+          <!-- Start / game-over overlay -->
+          <div class="overlay" id="overlay">
+            <div class="overlay-card">
+              <p class="overlay-emoji" id="overlayEmoji">🔢</p>
+              <h2 class="overlay-title" id="overlayTitle">Sudoku</h2>
+              <p class="overlay-subtitle" id="overlaySubtitle">
+                Fill the grid — no repeats in any row, column, or 3×3 box.
+              </p>
+
+              <!-- Difficulty selector -->
+              <div class="diff-toggle">
+                <button class="diff-btn active" id="diffEasy">Easy</button>
+                <button class="diff-btn"        id="diffMedium">Medium</button>
+                <button class="diff-btn"        id="diffHard">Hard</button>
+              </div>
+
+              <p class="overlay-final hidden" id="overlayFinal"></p>
+              <button class="btn-primary" id="btnStart">Start Game</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Number pad (touch + mouse fallback) -->
+        <div class="numpad" id="numpad">
+          <button class="num-btn" data-num="1">1</button>
+          <button class="num-btn" data-num="2">2</button>
+          <button class="num-btn" data-num="3">3</button>
+          <button class="num-btn" data-num="4">4</button>
+          <button class="num-btn" data-num="5">5</button>
+          <button class="num-btn" data-num="6">6</button>
+          <button class="num-btn" data-num="7">7</button>
+          <button class="num-btn" data-num="8">8</button>
+          <button class="num-btn" data-num="9">9</button>
+          <button class="num-btn erase-btn" data-num="0">⌫</button>
+        </div>
+
+      </div><!-- /.game-area -->
+    </div><!-- /.wrapper -->
+
+    <script type="module" src="game.js"></script>
+  </body>
+</html>
