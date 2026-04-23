@@ -1,12 +1,12 @@
 /* pong/style.css — pong-specific layout only.
    Shared tokens, reset, overlay, badge, button styles from shared/theme.css */
 
-body { height: 100vh; overflow: hidden; }
+body { height: 100vh; height: 100dvh; overflow: hidden; }
 
 /* ── Wrapper ──────────────────────────────────────────────────────── */
 .wrapper {
-  --game-w: min(860px, calc(100vw - 32px));
-  --game-h: min(480px, calc(100vh - 230px));
+  /* 3rd term: keep height ≤ viewport — (dvh - chrome) × (w/h ratio) */
+  --game-w: min(860px, calc(100vw - 32px), calc((100dvh - 230px) * 860 / 480));
 
   display: flex;
   flex-direction: column;
@@ -69,8 +69,8 @@ body { height: 100vh; overflow: hidden; }
 
 /* ── Canvas container ────────────────────────────────────────────── */
 .canvas-container {
-  width:  var(--game-w);
-  height: var(--game-h);
+  width:         var(--game-w);
+  aspect-ratio:  860 / 480;    /* keeps height in sync with computed width */
   box-shadow: 0 0 40px rgba(56, 189, 248, 0.15);
 }
 

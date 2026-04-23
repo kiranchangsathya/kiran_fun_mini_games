@@ -3,7 +3,8 @@
    come from shared/theme.css which is loaded first. */
 
 body {
-  height: 100vh;
+  height: 100vh;          /* fallback for older browsers */
+  height: 100dvh;         /* dynamic viewport — hides iOS Safari chrome correctly */
   overflow: hidden;
 }
 

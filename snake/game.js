@@ -251,6 +251,29 @@ class SnakeGame extends GameBase {
     this._input.bindButton(r.p2DpadDown,  'p2_down');
     this._input.bindButton(r.p2DpadLeft,  'p2_left');
     this._input.bindButton(r.p2DpadRight, 'p2_right');
+
+    // Canvas swipe-to-steer (P1) — natural mobile control
+    this._setupCanvasSwipe(r.canvas);
+  }
+
+  _setupCanvasSwipe(canvas) {
+    let startX = 0, startY = 0;
+    canvas.addEventListener('touchstart', e => {
+      const t = e.touches[0];
+      startX = t.clientX;
+      startY = t.clientY;
+    }, { passive: true });
+    canvas.addEventListener('touchend', e => {
+      const t = e.changedTouches[0];
+      const dx = t.clientX - startX;
+      const dy = t.clientY - startY;
+      if (Math.abs(dx) < 10 && Math.abs(dy) < 10) return; // ignore taps
+      if (Math.abs(dx) > Math.abs(dy)) {
+        this._dir(0, dx > 0 ? RIGHT : LEFT);
+      } else {
+        this._dir(0, dy > 0 ? DOWN : UP);
+      }
+    }, { passive: true });
   }
 
   _dir(playerIndex, direction) {

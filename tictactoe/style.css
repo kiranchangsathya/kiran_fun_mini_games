@@ -1,12 +1,12 @@
 /* tictactoe/style.css — Tic Tac Toe layout & theme (yellow/gold accent).
    Shared tokens, reset, overlay, badge, and button styles from theme.css. */
 
-body { height: 100vh; overflow: hidden; }
+body { height: 100vh; height: 100dvh; overflow: hidden; }
 
 /* ── Wrapper ─────────────────────────────────────────────────────── */
 .wrapper {
   /* Largest square that fits without overflowing viewport */
-  --game-size: min(420px, calc(100vw - 40px), calc(100vh - 190px));
+  --game-size: min(420px, calc(100vw - 40px), calc(100dvh - 190px));
 
   display: flex;
   flex-direction: column;

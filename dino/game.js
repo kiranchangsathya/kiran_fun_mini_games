@@ -48,6 +48,9 @@ class DinoGame extends GameBase {
     this._input.on('jump', () => this._tryJump());
     this._input.bindButton(g('btnJump'), 'jump');
 
+    // Tap the canvas to jump — natural mobile control
+    canvas.addEventListener('touchstart', () => this._tryJump(), { passive: true });
+
     this.showOverlay({ emoji: '🦕', title: 'Dino Run',
       subtitle: 'Jump over the cacti!', finalScore: null, buttonLabel: 'Start Game' });
   }

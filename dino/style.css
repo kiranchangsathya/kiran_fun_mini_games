@@ -1,12 +1,12 @@
 /* dino/style.css — dino-specific layout only.
    Shared tokens, reset, overlay, badge, button from shared/theme.css */
 
-body { height: 100vh; overflow: hidden; }
+body { height: 100vh; height: 100dvh; overflow: hidden; }
 
 /* ─── Wrapper ────────────────────────────────────────────────────── */
 .wrapper {
-  --game-w: min(900px, calc(100vw - 32px));
-  --game-h: min(260px, calc(100vh - 220px));
+  /* 3rd term: keep height ≤ viewport — (dvh - chrome) × (w/h ratio) */
+  --game-w: min(900px, calc(100vw - 32px), calc((100dvh - 220px) * 900 / 260));
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -38,8 +38,8 @@ body { height: 100vh; overflow: hidden; }
 
 /* ─── Canvas container ───────────────────────────────────────────── */
 .canvas-container {
-  width: var(--game-w);
-  height: var(--game-h);
+  width:        var(--game-w);
+  aspect-ratio: 900 / 260;    /* keeps height in sync with computed width */
   box-shadow: 0 0 40px rgba(251, 146, 60, 0.15);
 }
 

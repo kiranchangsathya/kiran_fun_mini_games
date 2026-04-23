@@ -108,3 +108,34 @@ body {
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+
+/* ─── Mobile responsive ──────────────────────────────────────────── */
+@media (max-width: 480px) {
+  body { align-items: flex-start; }
+
+  .home-wrapper {
+    gap: 24px;
+    padding: 24px 16px;
+  }
+
+  .home-title  { font-size: 2rem; letter-spacing: 1px; }
+  .home-subtitle { font-size: 0.9rem; }
+
+  .game-cards  { gap: 16px; }
+
+  .game-card {
+    width: 100%;           /* full-width cards on small screens */
+    max-width: 420px;
+    flex-direction: row;   /* icon + content side by side */
+    align-items: center;
+    gap: 16px;
+    padding: 20px 20px;
+    text-align: left;
+  }
+
+  .card-icon   { font-size: 2.8rem; flex-shrink: 0; }
+  .card-name   { font-size: 1.2rem; }
+  .card-desc   { font-size: 0.8rem; }
+  .card-controls { font-size: 0.68rem; }
+  .card-btn    { align-self: flex-start; padding: 8px 20px; font-size: 0.88rem; }
+}

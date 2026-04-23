@@ -8,11 +8,11 @@
   --cell-border-box:    #94a3b8;
 }
 
-body { height: 100vh; overflow: hidden; }
+body { height: 100vh; height: 100dvh; overflow: hidden; }
 
 /* ── Wrapper ──────────────────────────────────────────────────────── */
 .wrapper {
-  --game-size: min(450px, calc(100vw - 32px), calc(100vh - 210px));
+  --game-size: min(450px, calc(100vw - 32px), calc(100dvh - 210px));
   display: flex;
   flex-direction: column;
   align-items: center;

@@ -1,12 +1,12 @@
 /* tetris/style.css — Tetris-specific layout.
    Shared tokens, reset, overlay, badge, and button styles come from theme.css. */
 
-body { height: 100vh; overflow: hidden; }
+body { height: 100vh; height: 100dvh; overflow: hidden; }
 
 /* ── Wrapper ─────────────────────────────────────────────────────── */
 .wrapper {
   /* Canvas is portrait 1:2. Pick the largest width that keeps height ≤ viewport. */
-  --game-w: min(380px, calc(100vw - 124px), calc((100vh - 240px) / 2));
+  --game-w: min(380px, calc(100vw - 124px), calc((100dvh - 340px) / 2));
 
   display: flex;
   flex-direction: column;
