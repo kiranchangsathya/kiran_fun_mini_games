@@ -52,7 +52,8 @@ class DinoGame extends GameBase {
     canvas.addEventListener('touchstart', () => this._tryJump(), { passive: true });
 
     this.showOverlay({ emoji: '🦕', title: 'Dino Run',
-      subtitle: 'Jump over the cacti!', finalScore: null, buttonLabel: 'Start Game' });
+      subtitle: 'Jump over cacti and survive as long as you can! Speed increases as you level up.',
+      finalScore: null, buttonLabel: 'Start Game' });
   }
 
   // ── GameBase hooks ────────────────────────────────────────────────────────

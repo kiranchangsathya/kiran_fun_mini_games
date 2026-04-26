@@ -94,8 +94,6 @@ body {
   box-shadow: 0 0 40px rgba(74, 222, 128, 0.2);
 }
 
-/* Snake overlay scrolls top-aligned (tall overlay has color picker etc.) */
-.overlay { align-items: flex-start; overflow-y: auto; }
 
 /* ─── Mode toggle (segmented control) ──────────────────────────── */
 .mode-toggle {

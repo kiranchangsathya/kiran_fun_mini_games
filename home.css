@@ -2,6 +2,7 @@
 
 body {
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -13,7 +14,7 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 40px;
-  padding: 40px 20px;
+  padding: 48px 24px;
   width: 100%;
 }
 
@@ -33,109 +34,68 @@ body {
   color: var(--clr-text-dim);
 }
 
-/* ─── Card grid ──────────────────────────────────────────────────── */
-.game-cards {
-  display: flex;
-  gap: 28px;
-  flex-wrap: wrap;
-  justify-content: center;
+/* ─── Tile grid ───────────────────────────────────────────────────── */
+.game-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+  gap: 20px;
+  width: 100%;
+  max-width: 680px;
 }
 
-/* ─── Individual card (accent color set via --accent CSS var) ────── */
-.game-card {
+/* ─── Individual tile (accent color set via --accent CSS var) ─────── */
+.game-tile {
+  aspect-ratio: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 14px;
-  width: 240px;
-  padding: 36px 24px 28px;
   border-radius: var(--radius-xl);
   border: 2px solid var(--clr-surface);
   background: var(--clr-surface);
   text-decoration: none;
   color: var(--clr-text);
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
   animation: fadeUp 0.4s ease both;
 }
-.game-card:nth-child(2) { animation-delay: 0.1s; }
-.game-card:nth-child(3) { animation-delay: 0.2s; }
 
-/* Hover uses the per-card --accent variable — works for any future game */
-.game-card:hover {
-  transform: translateY(-6px);
+/* Stagger entrance for up to 6 tiles */
+.game-tile:nth-child(2) { animation-delay: 0.07s; }
+.game-tile:nth-child(3) { animation-delay: 0.14s; }
+.game-tile:nth-child(4) { animation-delay: 0.21s; }
+.game-tile:nth-child(5) { animation-delay: 0.28s; }
+.game-tile:nth-child(6) { animation-delay: 0.35s; }
+
+.game-tile:hover {
+  transform: scale(1.06);
   border-color: var(--accent);
-  box-shadow: 0 0 32px color-mix(in srgb, var(--accent) 35%, transparent);
+  box-shadow: 0 0 36px color-mix(in srgb, var(--accent) 40%, transparent);
 }
 
-.card-icon { font-size: 4rem; line-height: 1; }
+.tile-icon { font-size: 3.5rem; line-height: 1; }
 
-.card-name {
-  font-size: 1.5rem;
+.tile-name {
+  font-size: 1rem;
   font-weight: 700;
   color: #f1f5f9;
-}
-
-.card-desc {
-  font-size: 0.85rem;
-  color: var(--clr-text-muted);
   text-align: center;
-  line-height: 1.6;
+  padding: 0 8px;
 }
-
-.card-controls {
-  font-size: 0.72rem;
-  color: var(--clr-text-dim);
-  text-align: center;
-}
-
-/* Play button — uses per-card --accent variable */
-.card-btn {
-  margin-top: 6px;
-  padding: 10px 28px;
-  border-radius: var(--radius-md);
-  font-size: 0.95rem;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  background: var(--accent);
-  color: var(--clr-text-dark);
-  transition: filter 0.15s;
-}
-.card-btn:hover { filter: brightness(1.15); }
 
 /* ─── Entrance animation ─────────────────────────────────────────── */
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(20px); }
+  from { opacity: 0; transform: translateY(16px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
 /* ─── Mobile responsive ──────────────────────────────────────────── */
-@media (max-width: 480px) {
-  body { align-items: flex-start; }
+@media (max-width: 400px) {
+  .home-wrapper { gap: 28px; padding: 32px 16px; }
+  .home-title   { font-size: 2.2rem; letter-spacing: 1px; }
 
-  .home-wrapper {
-    gap: 24px;
-    padding: 24px 16px;
-  }
-
-  .home-title  { font-size: 2rem; letter-spacing: 1px; }
-  .home-subtitle { font-size: 0.9rem; }
-
-  .game-cards  { gap: 16px; }
-
-  .game-card {
-    width: 100%;           /* full-width cards on small screens */
-    max-width: 420px;
-    flex-direction: row;   /* icon + content side by side */
-    align-items: center;
-    gap: 16px;
-    padding: 20px 20px;
-    text-align: left;
-  }
-
-  .card-icon   { font-size: 2.8rem; flex-shrink: 0; }
-  .card-name   { font-size: 1.2rem; }
-  .card-desc   { font-size: 0.8rem; }
-  .card-controls { font-size: 0.68rem; }
-  .card-btn    { align-self: flex-start; padding: 8px 20px; font-size: 0.88rem; }
+  .game-tiles   { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .tile-icon    { font-size: 2.8rem; }
+  .tile-name    { font-size: 0.9rem; }
 }

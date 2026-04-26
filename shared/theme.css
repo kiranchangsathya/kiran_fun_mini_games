@@ -83,16 +83,23 @@ body {
 .p2-score { color: var(--clr-p2); }
 
 /* ── Overlay (start / game-over / pause) ─────────────────────────── */
+/*
+ * position: fixed so the overlay covers the full viewport, not just the
+ * canvas-container. This prevents the start card from being clipped on
+ * wide-short canvases (Dino) or small phone screens.
+ */
 .overlay {
-  position: absolute;
+  position: fixed;
   inset: 0;
+  z-index: 100;
   display: flex;
+  flex-direction: column;    /* allows margin:auto centering on the card */
   align-items: center;
-  justify-content: center;
-  background: rgba(15, 23, 42, 0.85);
-  backdrop-filter: blur(4px);
-  overflow-y: auto;
-  padding: 20px 16px;
+  justify-content: flex-start;
+  background: rgba(15, 23, 42, 0.92);
+  backdrop-filter: blur(6px);
+  overflow-y: auto;          /* scroll if content taller than viewport */
+  padding: 24px 16px;
 }
 .overlay.hidden { display: none; }
 
@@ -102,12 +109,47 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  margin: auto;
+  width: 100%;
+  max-width: 440px;
+  margin: auto;              /* centres vertically when content fits */
 }
 .overlay-emoji    { font-size: 3.5rem; line-height: 1; }
 .overlay-title    { font-size: 2rem; font-weight: 700; color: #f1f5f9; }
 .overlay-subtitle { font-size: 0.95rem; color: var(--clr-text-muted); }
 .overlay-final    { font-size: 1.1rem; color: #facc15; font-weight: 600; }
+
+/* ── Button row: primary action + Home side by side ─────────────────── */
+.overlay-btn-row {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+/* ── Home button — sits next to Start Game / Play Again ─────────────── */
+.btn-home-overlay {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--clr-border);
+  background: transparent;
+  color: var(--clr-text-muted);
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.15s, color 0.15s;
+}
+.btn-home-overlay:hover {
+  border-color: var(--clr-text-muted);
+  color: var(--clr-text);
+}
 
 /* ── Home / pause buttons (circular icon buttons in header) ──────── */
 .btn-icon {

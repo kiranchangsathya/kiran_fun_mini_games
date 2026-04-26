@@ -2,17 +2,17 @@
  * games.config.js
  *
  * Central registry of every game in the arcade.
- * The home page reads this to auto-generate game cards —
+ * The home page reads this to auto-generate tiles —
  * adding a new game only requires adding one entry here.
  *
  * Fields:
  *   id          Unique slug, matches the subfolder name
- *   name        Display name shown on the card
- *   emoji       Large icon shown at the top of the card
- *   accentColor CSS color for the card glow and Play button
- *   description Short description shown on the card (supports <br>)
+ *   name        Display name shown on the tile
+ *   emoji       Large icon shown on the tile
+ *   accentColor CSS color for the tile glow on hover
+ *   description Shown on the game's own start overlay (not the home page)
  *   href        Path to the game's index.html
- *   controls    One-liner hint shown in the card footer
+ *   controls    One-liner hint shown in the game's footer
  */
 
 export const GAMES = [

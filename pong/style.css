@@ -74,8 +74,6 @@ body { height: 100vh; height: 100dvh; overflow: hidden; }
   box-shadow: 0 0 40px rgba(56, 189, 248, 0.15);
 }
 
-/* Overlay scrolls so color-pickers fit on small screens */
-.overlay { align-items: flex-start; overflow-y: auto; }
 
 /* Pong primary button — sky blue */
 .btn-primary { margin-top: 8px; background: #38bdf8; color: #0f172a; }

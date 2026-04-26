@@ -13,26 +13,23 @@
         <h1 class="home-title">🎮 Arcade</h1>
         <p class="home-subtitle">Pick a game and play!</p>
       </header>
-      <!-- Cards are injected here by home.js reading games.config.js -->
-      <div class="game-cards" id="gameCards"></div>
+      <!-- Tiles are injected here by home.js reading games.config.js -->
+      <div class="game-tiles" id="gameTiles"></div>
     </div>
 
     <script type="module">
       import { GAMES } from './games.config.js';
 
-      const container = document.getElementById('gameCards');
+      const container = document.getElementById('gameTiles');
 
       GAMES.forEach(game => {
         const a = document.createElement('a');
-        a.className = 'game-card';
+        a.className = 'game-tile';
         a.href      = game.href;
         a.style.setProperty('--accent', game.accentColor);
         a.innerHTML = `
-          <div class="card-icon">${game.emoji}</div>
-          <h2 class="card-name">${game.name}</h2>
-          <p class="card-desc">${game.description}</p>
-          <p class="card-controls">${game.controls}</p>
-          <span class="card-btn">Play →</span>
+          <div class="tile-icon">${game.emoji}</div>
+          <h2 class="tile-name">${game.name}</h2>
         `;
         container.appendChild(a);
       });

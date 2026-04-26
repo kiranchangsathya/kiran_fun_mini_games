@@ -99,7 +99,8 @@ class SnakeGame extends GameBase {
     this._initModeToggle();
     this._initColorPicker();
 
-    this.showOverlay({ emoji: '🐍', title: 'Snake', subtitle: '',
+    this.showOverlay({ emoji: '🐍', title: 'Snake',
+                       subtitle: 'Eat food, grow your snake, and don\'t crash! Solo or 2-player mode.',
                        finalScore: null, buttonLabel: 'Start Game' });
   }
 

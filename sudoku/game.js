@@ -56,7 +56,7 @@ class SudokuGame extends GameBase {
 
     this.showOverlay({
       emoji: '🔢', title: 'Sudoku',
-      subtitle: 'Fill the grid — no repeats in any row, column, or 3×3 box.',
+      subtitle: 'Fill the 9×9 grid with no repeats in any row, column, or box. Easy, Medium, and Hard modes.',
       finalScore: null, buttonLabel: 'Start Game',
     });
   }

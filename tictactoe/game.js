@@ -65,7 +65,7 @@ class TicTacToeGame extends GameBase {
 
     this.showOverlay({
       emoji: '⭕', title: 'Tic Tac Toe',
-      subtitle: 'Get 3 in a row to win!',
+      subtitle: 'Get 3 in a row to win! Play vs an unbeatable computer or a friend.',
       finalScore: null, buttonLabel: 'Start Game',
     });
   }

@@ -108,7 +108,7 @@ class PongGame extends GameBase {
 
     this.showOverlay({
       emoji: '🏓', title: 'Ping Pong',
-      subtitle: 'First to 10 wins!',
+      subtitle: 'Classic 1v1 or vs-computer paddle battle. First to 10 wins — pick your colors!',
       finalScore: null, buttonLabel: 'Start Game',
     });
   }

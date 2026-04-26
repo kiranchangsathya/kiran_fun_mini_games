@@ -144,6 +144,11 @@ export class GameBase {
       overlayFinal.textContent = finalScore ?? '';
       overlayFinal.classList.toggle('hidden', finalScore === null);
     }
+    // Always show the Home button whenever the overlay is visible.
+    const homeBtn = document.getElementById('btnHomeOverlay');
+    if (homeBtn) {
+      homeBtn.classList.remove('hidden');
+    }
     this.els.overlay.classList.remove('hidden');
   }
 

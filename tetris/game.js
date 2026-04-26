@@ -72,7 +72,7 @@ class TetrisGame extends GameBase {
     this._setupInput();
 
     this.showOverlay({ emoji: '🟪', title: 'Tetris',
-                       subtitle: 'Stack blocks and clear lines!',
+                       subtitle: 'Stack falling blocks and clear lines! Speed increases as you level up.',
                        finalScore: null, buttonLabel: 'Start Game' });
   }
 
