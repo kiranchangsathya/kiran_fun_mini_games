@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>🦕 Dino Run</title>
+    <title>🚀 Galaxy Shooter</title>
     <link rel="stylesheet" href="../shared/theme.css" />
     <link rel="stylesheet" href="style.css" />
   </head>
@@ -15,7 +15,7 @@
         <a class="btn-icon" href="../index.html" title="Back to Home">🏠</a>
 
         <div class="title-group">
-          <h1 class="title">🦕 Dino Run</h1>
+          <h1 class="title">🚀 Galaxy Shooter</h1>
           <span class="speed-badge" id="speedBadge">Lv. 1</span>
         </div>
 
@@ -25,22 +25,34 @@
             <span class="score-value" id="scoreEl">0</span>
           </div>
           <div class="score-item">
+            <span class="score-label">LIVES</span>
+            <span class="score-value lives-display" id="livesEl">❤️❤️❤️</span>
+          </div>
+          <div class="score-item">
             <span class="score-label">BEST</span>
             <span class="score-value hi-score" id="hiScoreEl">0</span>
           </div>
         </div>
+
+        <button class="btn-icon" id="btnPause" title="Pause (P)">⏸</button>
       </header>
 
       <!-- ── Canvas ────────────────────────────────────────────────── -->
       <div class="canvas-container">
         <canvas id="gameCanvas"></canvas>
 
+        <!-- Pause overlay -->
+        <div class="pause-overlay hidden" id="pauseOverlay">
+          <p class="pause-text">⏸ PAUSED</p>
+          <p class="pause-hint">Tap or press P to resume</p>
+        </div>
+
         <!-- Start / Game-over overlay -->
         <div class="overlay" id="overlay">
           <div class="overlay-card">
-            <p class="overlay-emoji" id="overlayEmoji">🦕</p>
-            <h2 class="overlay-title" id="overlayTitle">Dino Run</h2>
-            <p class="overlay-subtitle" id="overlaySubtitle">Jump over the cacti!</p>
+            <p class="overlay-emoji" id="overlayEmoji">🚀</p>
+            <h2 class="overlay-title" id="overlayTitle">Galaxy Shooter</h2>
+            <p class="overlay-subtitle" id="overlaySubtitle">Defend the galaxy from alien invaders!</p>
             <p class="overlay-final hidden" id="overlayFinal"></p>
             <div class="overlay-btn-row">
               <button class="btn-primary" id="btnStart">Start Game</button>
@@ -50,22 +62,25 @@
         </div>
       </div>
 
-      <!-- ── Jump button (mouse / touch) ──────────────────────────── -->
-      <div class="jump-controls">
-        <button class="btn-jump" id="btnJump">⬆ JUMP</button>
+      <!-- ── Mobile touch controls ────────────────────────────────── -->
+      <div class="touch-controls" id="touchControls">
+        <button class="btn-touch btn-left" id="btnLeft">◀</button>
+        <button class="btn-touch btn-fire" id="btnFire">🔥</button>
+        <button class="btn-touch btn-right" id="btnRight">▶</button>
       </div>
 
       <!-- ── Footer ───────────────────────────────────────────────── -->
       <footer class="footer">
-        Press <strong>Space</strong> or tap <strong>⬆ JUMP</strong> to leap over cacti &nbsp;·&nbsp; Don't crash!
+        <strong>← →</strong> Move &nbsp;·&nbsp; 🔫 Auto-fire &nbsp;·&nbsp; <strong>P</strong> Pause &nbsp;·&nbsp; Bosses appear every 3 levels!
       </footer>
 
     </div>
-    <!-- ── Orientation lock (mobile portrait → ask to rotate) ────── -->
+
+    <!-- ── Orientation lock (mobile portrait → ask to rotate) ──── -->
     <div class="orient-overlay orient-need-landscape" id="orientOverlay">
       <span class="orient-icon">📱</span>
       <p class="orient-title">Rotate your device</p>
-      <p class="orient-msg">🦕 Dino Run plays best in <strong>landscape</strong> mode.<br>Turn your phone sideways to continue!</p>
+      <p class="orient-msg">🚀 Galaxy Shooter plays best in <strong>landscape</strong> mode.<br>Turn your phone sideways to continue!</p>
     </div>
 
     <script type="module" src="game.js"></script>

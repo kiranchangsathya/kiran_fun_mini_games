@@ -195,3 +195,71 @@ canvas { display: block; width: 100%; height: 100%; }
 
 /* ── Footer ───────────────────────────────────────────────────────── */
 .footer { font-size: 0.78rem; color: var(--clr-text-dim); text-align: center; }
+
+/* ── Orientation lock overlay ────────────────────────────────────────
+   Add .orient-need-landscape to the div on games that require landscape.
+   Add .orient-need-portrait  to the div on games that require portrait.
+   The overlay only appears on touch-primary devices (phones/tablets).
+   ─────────────────────────────────────────────────────────────────── */
+.orient-overlay {
+  display: none;           /* hidden by default / on desktop */
+  position: fixed;
+  inset: 0;
+  z-index: 99999;          /* above everything, including game overlays */
+  background: rgba(15, 23, 42, 0.97);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 32px 24px;
+  gap: 20px;
+}
+
+.orient-icon {
+  font-size: 4rem;
+  line-height: 1;
+  display: inline-block;
+}
+
+/* Landscape-required games: icon animates from portrait → landscape */
+.orient-need-landscape .orient-icon {
+  animation: orient-to-landscape 1.6s ease-in-out infinite alternate;
+}
+@keyframes orient-to-landscape {
+  from { transform: rotate(0deg);   }
+  to   { transform: rotate(-90deg); }
+}
+
+/* Portrait-required games: icon animates from landscape → portrait */
+.orient-need-portrait .orient-icon {
+  animation: orient-to-portrait 1.6s ease-in-out infinite alternate;
+}
+@keyframes orient-to-portrait {
+  from { transform: rotate(-90deg); }
+  to   { transform: rotate(0deg);   }
+}
+
+.orient-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--clr-text);
+  margin: 0;
+}
+
+.orient-msg {
+  font-size: 0.95rem;
+  color: var(--clr-text-muted);
+  max-width: 300px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Show landscape overlay only on mobile in portrait mode */
+@media (hover: none) and (pointer: coarse) and (orientation: portrait) {
+  .orient-need-landscape { display: flex; }
+}
+
+/* Show portrait overlay only on mobile in landscape mode */
+@media (hover: none) and (pointer: coarse) and (orientation: landscape) {
+  .orient-need-portrait  { display: flex; }
+}

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🃏 Memory Match</title>
+    <link rel="stylesheet" href="../shared/theme.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="wrapper">
+
+      <!-- ── Header ─────────────────────────────────────────────── -->
+      <header class="header">
+        <a class="btn-icon" href="../index.html" title="Back to Home">🏠</a>
+        <h1 class="title">🃏 Memory Match</h1>
+        <span class="speed-badge hidden" id="speedBadge"></span>
+
+        <!-- Scoreboard -->
+        <div class="score-board">
+          <div class="score-pill p1-pill">
+            <span class="pill-label" id="nameP1">Player 1</span>
+            <span class="pill-value" id="scoreP1">0</span>
+          </div>
+          <div class="score-pill draw-pill">
+            <span class="pill-label">Pairs</span>
+            <span class="pill-value" id="pairsLeft">18</span>
+          </div>
+          <div class="score-pill p2-pill">
+            <span class="pill-label" id="nameP2">Computer</span>
+            <span class="pill-value" id="scoreP2">0</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- ── Game canvas ─────────────────────────────────────────── -->
+      <div class="canvas-wrapper">
+        <div class="canvas-container">
+          <canvas id="gameCanvas"></canvas>
+
+          <!-- ── Start / Game-over overlay ───────────────────────── -->
+          <div class="overlay" id="overlay">
+            <div class="overlay-card">
+              <p class="overlay-emoji" id="overlayEmoji">🃏</p>
+              <h2 class="overlay-title" id="overlayTitle">Memory Match</h2>
+              <p class="overlay-subtitle" id="overlaySubtitle">
+                Flip tiles and find matching pairs!<br>Country flags &amp; Avenger heroes.
+              </p>
+
+              <!-- Mode toggle -->
+              <div class="mode-toggle">
+                <button class="mode-btn active" id="modeComputer">vs Computer</button>
+                <button class="mode-btn"        id="modeFriend">vs Friend</button>
+              </div>
+
+              <!-- Name inputs -->
+              <div class="name-inputs">
+                <div class="name-field">
+                  <label class="name-label p1-label" for="nameInputP1">🔴 Player 1</label>
+                  <input class="name-input" id="nameInputP1"
+                         type="text" maxlength="12" placeholder="Player 1" value="Player 1" />
+                </div>
+                <div class="name-field">
+                  <label class="name-label p2-label" for="nameInputP2">
+                    🔵 <span id="p2LabelText">Computer</span>
+                  </label>
+                  <input class="name-input hidden" id="nameInputP2"
+                         type="text" maxlength="12" placeholder="Player 2" value="Player 2" />
+                </div>
+              </div>
+
+              <p class="overlay-final hidden" id="overlayFinal"></p>
+              <div class="overlay-btn-row">
+                <button class="btn-primary" id="btnStart">Start Game</button>
+                <a class="btn-home-overlay hidden" id="btnHomeOverlay" href="../index.html">🏠 Home</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Status bar -->
+        <p class="status-text" id="statusText">Flip tiles to find matching pairs!</p>
+      </div>
+
+    </div><!-- /.wrapper -->
+
+    <!-- ── Spin-wheel modal (shown between overlay and game start) ── -->
+    <div class="spin-modal hidden" id="spinModal">
+      <div class="spin-card">
+        <h2 class="spin-title">🎡 Who Goes First?</h2>
+        <div class="spin-canvas-wrap">
+          <canvas id="spinCanvas" width="300" height="300"></canvas>
+          <div class="spin-pointer">▼</div>
+        </div>
+        <p class="spin-result" id="spinResult">&nbsp;</p>
+        <div class="overlay-btn-row">
+          <button class="btn-primary hidden" id="btnPlay">Let's Play! 🎮</button>
+        </div>
+        <button class="btn-spin" id="btnSpin">Spin!</button>
+      </div>
+    </div>
+
+    <!-- ── Orientation lock (mobile landscape → ask to rotate) ───── -->
+    <div class="orient-overlay orient-need-portrait" id="orientOverlay">
+      <span class="orient-icon">📱</span>
+      <p class="orient-title">Rotate your device</p>
+      <p class="orient-msg">🃏 Memory Match plays best in <strong>portrait</strong> mode.<br>Turn your phone upright to continue!</p>
+    </div>
+
+    <script type="module" src="game.js"></script>
+  </body>
+</html>
